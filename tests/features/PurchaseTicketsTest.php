@@ -23,6 +23,8 @@ class PurchaseTicketsTest extends TestCase
         // Act
         // Purchase concert tickets
         $paymentGateway = new FakePaymentGateway();
+
+        // register instance
         $this->app->instance(PaymentGateway::class, $paymentGateway);
 
         $this->post("/concerts/{$concert->id}/orders", [
@@ -34,10 +36,10 @@ class PurchaseTicketsTest extends TestCase
         // Assert
         // Make sure the customer was charged the correct amount
         $this->assertEquals(9750, $paymentGateway->totalCharges());
-//
-//        // Make sure that an order exists for this customer
+
+        // Make sure that an order exists for this customer
         $order = $concert->orders()->where('email', 'john@example.com')->first();
         $this->assertNotNull($order);
-        $this->assertEquals(3, $order->tickets->count());
+        $this->assertEquals(3, $order->tickets()->count());
     }
 }
