@@ -4,6 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Concert
+ *
+ * @property-read mixed $formatted_date
+ * @property-read mixed $formatted_start_time
+ * @property-read mixed $ticket_price_in_dollars
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Order[] $orders
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Concert newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Concert newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Concert published()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Concert query()
+ * @mixin \Eloquent
+ */
 class Concert extends Model
 {
     protected $guarded = [];
@@ -32,5 +45,16 @@ class Concert extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function orderTickets($email, $ticketQuantity)
+    {
+        $order = $this->orders()->create(['email' => $email]);
+
+        foreach (range(1, $ticketQuantity) as $i) {
+            $order->tickets()->create([]);
+        }
+
+        return $order;
     }
 }
